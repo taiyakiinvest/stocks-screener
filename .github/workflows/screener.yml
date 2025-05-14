@@ -14,4 +14,5 @@ jobs:
       - run: pip install -r requirements.txt
       - env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        run: python usc_screener.py
+run: python "usc_screener (1).py"
+
