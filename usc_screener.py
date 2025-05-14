@@ -5,11 +5,21 @@ MCAP_MAX = 50_000_000_000       # 500 億
 NETCASH_RATIO_MIN = 1
 
 def passes(info):
-    cap = info.get("marketCap")
-    cash, debt = info.get("totalCash"), info.get("totalDebt", 0)
-    per = info.get("trailingPE")
-    if not (cap and cash is not None and per):
+    cap  = info.get("marketCap")
+    cash = info.get("totalCash")
+    debt = info.get("totalDebt", 0)
+    per  = info.get("trailingPE")
+
+    # --- ここが追加・変更部分 --------------------------
+    try:
+        per = float(per)          # 文字列 → 数値に変換
+    except (TypeError, ValueError):
+        return False              # 変換できなければ不合格
+    # --------------------------------------------------
+
+    if not (cap and cash is not None):
         return False
+
     netcash = (cash - debt) / cap if cap else 0
     return per <= PER_MAX and cap < MCAP_MAX and netcash >= NETCASH_RATIO_MIN
 
